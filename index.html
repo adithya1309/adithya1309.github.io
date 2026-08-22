@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adithya Renjit</title>
+<meta name="description" content="Adithya Renjit — mechanical engineering at NYU. Deep learning, robotics research, thermal systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<noscript><style>
+  /* no canvas, no track switching: show everything, stacked */
+  .track[hidden]{display:block !important}
+  .tabs{display:none}
+</style></noscript>
+</head>
+<body>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div id="nebula" aria-hidden="true"></div>
+<div id="vignette" aria-hidden="true"></div>
+
+<main>
+
+  <!-- intro block: the only thing above the fold -->
+  <section class="view hero" id="home">
+    <div class="slab hero-slab">
+      <h1 class="hero-name">Adithya Renjit</h1>
+      <p class="hero-line">B.S., Mechanical Engineering &nbsp;&#183;&nbsp; Minor, Mathematics</p>
+      <a class="hero-mail" href="mailto:adithya.renjit@nyu.edu">adithya.renjit@nyu.edu</a>
+      <div class="hero-links">
+        <a href="https://github.com/adithya1309" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .271.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/adithyavrenjit/" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+        </a>
+      </div>
+
+      <!-- these four ARE the navigation; each owns the whole page below -->
+      <nav class="tabs" aria-label="Sections">
+        <button data-track="about"      aria-current="true">About</button>
+        <button data-track="experience" aria-current="false">Experience</button>
+        <button data-track="projects"   aria-current="false">Projects</button>
+        <button data-track="glass"      aria-current="false">GLASS</button>
+      </nav>
+    </div>
+  </section>
+
+  <div id="tracks">
+
+    <div class="track" data-track="about">
+      <section class="view">
+        <div class="slab">
+          <p class="eyebrow">About me</p>
+          <div class="aboutrow">
+            <img class="avatar" src="assets/headshot.jpg" alt="Adithya Renjit" width="559" height="1047">
+            <div>
+              <h2 class="title">Mechanical engineering honors student at NYU.</h2>
+              <p>Currently exploring <strong>deep learning</strong>, researching <strong>robotics</strong>
+                 at New York University, building <strong>thermal systems</strong>, and reading.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view">
+        <div class="slab">
+          <p class="eyebrow">Skills</p>
+          <h2 class="title">An overview.</h2>
+          <div class="cols">
+            <div><div class="ck">Coursework</div><div class="cv">Multivariable Calculus<br>Linear Algebra<br>Thermodynamics</div></div>
+            <div><div class="ck">Languages</div><div class="cv">Python<br>C++<br>MATLAB</div></div>
+            <div><div class="ck">Tools</div><div class="cv">PyTorch<br>TensorFlow<br>SolidWorks</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view">
+        <div class="slab slab--narrow">
+          <p class="eyebrow">Interests</p>
+          <h2 class="title">Surfing and basketball, mostly.</h2>
+          <p>If I&rsquo;m not doing anything academic, I&rsquo;m either at the beach surfing or at
+             pickup basketball &mdash; open runs. (I am &ldquo;comp&rdquo;, not &ldquo;decent&rdquo;.)</p>
+        </div>
+      </section>
+      <div class="totop">
+        <a href="#home">&uarr;&nbsp;&nbsp;Back to top</a>
+      </div>
+
+    </div>
+
+    <div class="track" data-track="experience" hidden>
+      <section class="view view--centred">
+        <div class="slab slab--wide">
+          <p class="eyebrow">Work</p>
+          <h2 class="title">Professional Experience.</h2>
+          <ul class="entries">
+            <li>
+              <div class="hd"><span class="t">Investment Intern &mdash; BRCPL</span>
+              <span class="d">May 2026 &mdash; Jul 2026</span></div>
+              <div class="s">Created data pipelines and portfolio models for an asset manager.</div>
+            </li>
+            <li>
+              <div class="hd"><span class="t">Teaching Assistant &mdash; NYU Engineering &amp; Design</span>
+              <span class="d">Sep 2025 &mdash; Present</span></div>
+              <div class="s">Led lab sections on digital logic, CAD, and C++, supporting soldering
+                  and Arduino builds.</div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="view view--centred">
+        <div class="slab slab--wide">
+          <p class="eyebrow">Research Teams</p>
+          <h2 class="title">Contributing to.</h2>
+          <ul class="entries">
+            <li>
+              <div class="hd"><span class="t">FAMS Lab &mdash; NYU</span>
+              <span class="d">Sep 2026 &mdash; Present</span></div>
+              <div class="s">Focusing on soft robotics, artificial intelligence, and mechatronic systems.</div>
+            </li>
+            <li>
+              <div class="hd"><span class="t">Rogue Aerospace &mdash; NYU</span>
+              <span class="d">Sep 2025 &mdash; Present</span></div>
+              <div class="s">Building civilian-class rockets for competition.</div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <div class="totop">
+        <a href="#home">&uarr;&nbsp;&nbsp;Back to top</a>
+      </div>
+
+    </div>
+
+    <div class="track" data-track="projects" hidden>
+      <section class="view view--centred">
+        <div class="stack">
+          <p class="trackhead">Selected Projects</p>
+          <div class="slab slab--wide">
+                        <h2 class="title">Aksharamala</h2>
+            <p>A convolutional neural net and web app that teaches Malayalam script.</p>
+            <div class="embed">
+              <iframe src="https://www.youtube-nocookie.com/embed/Khj7lOnFQ6Q"
+                title="Aksharamala demo" loading="lazy" allowfullscreen
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+            <div class="chips"><span class="chip">Python</span><span class="chip">PyTorch</span><span
+              class="chip">pandas</span><span class="chip">Completed</span><a class="chip chip--link"
+              href="https://youtu.be/Khj7lOnFQ6Q" target="_blank" rel="noopener">Demo</a></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view view--centred">
+        <div class="slab slab--wide">
+                    <h2 class="title">gpuplate</h2>
+          <p>Developing a cold plate for an RTX 4090.</p>
+          <div class="chips"><span class="chip">SolidWorks</span><span class="chip">In progress</span></div>
+        </div>
+      </section>
+
+      <section class="view view--centred">
+        <div class="slab slab--wide">
+                    <h2 class="title">Physics-Informed Neural Net for Battery Degradation</h2>
+          <p>Recovering negative-electrode diffusion from raw voltage.</p>
+          <div class="chips"><span class="chip">PyTorch</span><span class="chip">In progress</span></div>
+        </div>
+      </section>
+      <div class="totop">
+        <a href="#home">&uarr;&nbsp;&nbsp;Back to top</a>
+      </div>
+
+    </div>
+
+    <div class="track" data-track="glass" hidden>
+      <section class="view">
+        <div class="slab">
+          <p class="eyebrow">Overview</p>
+          <h2 class="title">What GLASS is.</h2>
+          <p class="quote">&ldquo;The Global Leaders and Scholars in STEM (GLASS) program brings together
+             and supports high-achieving undergraduates with the potential for becoming global leaders
+             in innovation, technology, research, and entrepreneurship.&rdquo;</p>
+        </div>
+      </section>
+
+      <section class="view view--centred">
+        <div class="stack">
+          <div class="slab slab--wide mission">
+            <p class="eyebrow">Mission Statement</p>
+            <h2 class="mission-title">Global Challenge</h2>
+            <blockquote class="pull">&ldquo;Improving access through efficient and sustainable infrastructure.&rdquo;</blockquote>
+            <p>As a <strong>mechanical engineering</strong> student, and someone who grew up volunteering
+               at underprivileged communities across Borneo, I understood firsthand that engineers have
+               the potential to bridge social and economic gaps by designing
+               <strong>affordable infrastructure</strong> and creating
+               <strong>innovative, sustainable technologies</strong>.</p>
+            <p>Being a <strong>GLASS Scholar</strong> gives me access to the resources required to turn my
+               ambitions into a reality, and it makes achieving my goals a little easier. Through the
+               three-year program I can see myself growing both professionally and personally into
+               somebody who can leave a <strong>lasting positive impact</strong> on not only my local
+               community but the world too.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="view view--centred">
+        <div class="pair">
+          <div class="slab">
+            <p class="eyebrow">Goals</p>
+            <h2 class="title">UN Sustainable Development Goals (SDGs)</h2>
+            <ul class="entries">
+              <li><div class="hd"><span class="t">Reduced Inequalities</span></div></li>
+              <li><div class="hd"><span class="t">Quality Education</span></div></li>
+            </ul>
+          </div>
+          <div class="slab">
+            <p class="eyebrow">Focus</p>
+            <h2 class="title">Impact Areas</h2>
+            <ul class="entries">
+              <li><div class="hd"><span class="t">Quantum Science &amp; Technologies</span></div></li>
+              <li><div class="hd"><span class="t">Industrial, Urban &amp; Environmental Sustainability</span></div></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="view view--centred">
+        <div class="stack stack--windows">
+          <p class="trackhead">The Five Windows</p>
+          <div class="slab slab--head">
+            <h2 class="title">The five GLASS competencies.</h2>
+            <p>GLASS develops mastery across five areas. Each window gets its own page tracking
+               goals, plans, and progress.</p>
+          </div>
+          <div class="ring">
+          <a class="win" href="#" style="--x:50%;--y:10%">
+            <span class="win-num">01</span>
+            <span class="win-title">Professional Development</span>
+            <span class="win-desc">Internships, research, certifications, and conferences that build the engineering career.</span>
+            <span class="win-go">Open window &rarr;</span>
+          </a>
+          <a class="win" href="#" style="--x:84%;--y:38%">
+            <span class="win-num">02</span>
+            <span class="win-title">Academic Excellence</span>
+            <span class="win-desc">Rigorous coursework, research, and design work at the core of the honors curriculum.</span>
+            <span class="win-go">Open window &rarr;</span>
+          </a>
+          <a class="win" href="#" style="--x:71%;--y:82%">
+            <span class="win-num">03</span>
+            <span class="win-title">Commitment to Service</span>
+            <span class="win-desc">Service learning, mentoring, and community engagement tied to the SDGs and Impact Areas.</span>
+            <span class="win-go">Open window &rarr;</span>
+          </a>
+          <a class="win" href="#" style="--x:29%;--y:82%">
+            <span class="win-num">04</span>
+            <span class="win-title">Global Competency</span>
+            <span class="win-desc">The required semester abroad and the cross-cultural work that widens an engineering perspective.</span>
+            <span class="win-go">Open window &rarr;</span>
+          </a>
+          <a class="win" href="#" style="--x:16%;--y:38%">
+            <span class="win-num">05</span>
+            <span class="win-title">Leadership Development</span>
+            <span class="win-desc">Team leadership, mentoring, and the cohort seminar series.</span>
+            <span class="win-go">Open window &rarr;</span>
+          </a>
+            </div>
+        </div>
+      </section>
+      <div class="totop">
+        <a href="#home">&uarr;&nbsp;&nbsp;Back to top</a>
+      </div>
+
+
+    </div>
+
+  </div>
+</main>
+
+<!-- footer removed: socials, scroll indicator and place slot all dropped -->
+
+<script src="galaxy.js"></script>
+</body>
+</html>

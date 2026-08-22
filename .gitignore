@@ -1,0 +1,6 @@
+# naxo.dev's stylesheets — reference material I read the design system out of.
+# Someone else's CSS; not mine to republish.
+naxocss/
+
+# Lavish review artifact + its build notes. Working material, not the site.
+.lavish/

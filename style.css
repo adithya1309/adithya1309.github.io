@@ -1,0 +1,275 @@
+/* ══ tokens lifted from naxocss ══ */
+  :root{
+    --black:#000;
+    --white:#fff;
+    --w-50:#ffffff80;
+    --w-25:#ffffff40;
+    --w-10:#ffffff1a;
+    --w-05:#ffffff0d;
+    --gray:#4c4c4c;
+    --g-from:#090cbb;
+    --g-to:#e39bf3;
+    --active:#0e1996;
+    --grad:linear-gradient(to right,var(--g-from),var(--g-to));
+    --lilac:#e39bf3;      /* the single accent, replaces gradient text */
+    --lilac-hi:#f6dcfd;
+    --lilac-dim:#a184ad;
+    --slab:rgba(0,0,0,.40);
+  }
+  *{box-sizing:border-box;min-width:0}
+  html{scroll-behavior:smooth;background:#000}
+  /* scrollbar hidden, scrolling untouched - keyboard, wheel and touch all still work */
+  html{scrollbar-width:none;-ms-overflow-style:none}
+  html::-webkit-scrollbar{width:0;height:0;display:none}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:#000;color:var(--white);
+    font-family:'Sora','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight:300;font-size:15px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .grad-text{color:var(--lilac);-webkit-text-fill-color:var(--lilac)}
+
+  /* ══ fixed particle field — the camera ══ */
+  #field{position:fixed;inset:0;width:100%;height:100%;z-index:1;display:block;pointer-events:none}
+  /* nebula sits BEHIND the canvas so additive particles read on top of it */
+  #nebula{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(55% 60% at 78% 26%, rgba(227,155,243,.10) 0%, transparent 65%),
+      radial-gradient(65% 70% at 14% 74%, rgba(9,12,187,.20) 0%, transparent 68%);
+  }
+  #vignette{
+    position:fixed;inset:0;z-index:2;pointer-events:none;
+    background:radial-gradient(135% 105% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%);
+  }
+
+  /* ══ sections ══ */
+  main{position:relative;z-index:10}
+  section.view{
+    min-height:100vh;min-height:100dvh;
+    display:flex;align-items:center;
+    padding:100px clamp(28px,6vw,96px) 100px;
+  }
+  section.hero{justify-content:center}
+  /* Alternate sides so the galaxy always owns the other half of the
+     screen. Camera poses push the disc the opposite way to match. */
+  .track section.view:nth-of-type(odd){justify-content:flex-start}
+  .track section.view:nth-of-type(even){justify-content:flex-end}
+  /* Must out-specify the nth-of-type side rules above. Without the #tracks
+     prefix this ties them at (0,3,1) and only wins on source order;
+     the id makes it (1,3,1). Otherwise every "centred" section is
+     still shoved left or right. */
+  #tracks .track section.view.view--centred{justify-content:center}
+  .track[hidden]{display:none}
+  .slab{
+    width:100%;max-width:min(620px,48vw);
+    background:var(--slab);
+    -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+    border:1px solid var(--w-10);
+    padding:44px 46px;
+  }
+  .slab--narrow{max-width:min(520px,42vw)}
+  .slab--wide{max-width:min(1020px,86vw);padding:58px 62px}
+  /* a label that sits outside the slab, on the galaxy itself */
+  .stack{display:flex;flex-direction:column;gap:16px;width:100%;max-width:min(1020px,86vw)}
+  .stack .slab--wide{max-width:none}
+  /* two boxes sharing one scroll section */
+  .pair{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;
+    width:100%;max-width:min(1020px,86vw);align-items:stretch;
+  }
+  .pair .slab{max-width:none;height:100%}
+  /* the ring has no box of its own, so the galaxy shows through its centre */
+  .stack--windows{width:100%;max-width:min(880px,86vw);align-items:stretch}
+  .slab--head{max-width:min(600px,80vw);align-self:center;text-align:center}
+  /* a quoted definition, not the author's own prose */
+  .quote{border-left:1px solid var(--lilac);padding-left:20px;font-style:italic}
+  /* mission block: heavier than the rest of the site, per the reference layout */
+  .mission-title{
+    font-size:clamp(2rem,5.2vw,3.8rem);font-weight:600;letter-spacing:-.02em;
+    line-height:1;margin:0 0 36px;
+  }
+  .pull{
+    margin:0 0 32px;padding-left:26px;
+    border-left:1px solid rgba(227,155,243,.55);
+    font-size:clamp(1.15rem,2.3vw,1.85rem);font-weight:500;line-height:1.34;
+    color:var(--white);max-width:46ch;
+  }
+  .mission p{max-width:78ch}
+  .mission p strong{color:var(--white);font-weight:500}
+
+  /* five windows laid out on a circle. Positions are precomputed points
+     at -90 + i*72 degrees, so no JS and no trig at runtime. */
+  .ring{
+    position:relative;width:100%;max-width:min(880px,86vw);aspect-ratio:1.25;
+    margin:34px auto 0;background:none;
+  }
+  .win{
+    position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);
+    width:28%;min-width:160px;
+    display:flex;flex-direction:column;gap:6px;
+    padding:16px 17px 14px;border:1px solid var(--w-10);border-radius:10px;
+    background:rgba(0,0,0,.68);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    text-decoration:none;
+    transition:border-color .3s,background .3s,transform .3s;
+  }
+  .win:hover{border-color:var(--lilac);background:rgba(0,0,0,.82);
+             transform:translate(-50%,-50%) scale(1.04)}
+  .win:focus-visible{outline:1px solid var(--lilac);outline-offset:3px}
+  .win-num{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.6rem;color:var(--lilac-dim)}
+  .win-title{font-size:.88rem;font-weight:500;color:var(--white);line-height:1.25}
+  .win-desc{font-size:.71rem;line-height:1.45;color:rgba(255,255,255,.62)}
+  .win-go{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.6rem;
+          color:var(--lilac);margin-top:2px}
+  /* end of each track. A plain anchor, so the page's own smooth-scroll
+     handles it and prefers-reduced-motion turns it into an instant jump. */
+  /* Inline demo. Width is also capped against viewport height so a 16:9 box
+     cannot push the rest of the card off screen on a short display. */
+  .embed{
+    position:relative;
+    width:min(720px, 100%, calc((100dvh - 470px) * 16 / 9));
+    aspect-ratio:16/9;margin:22px auto 6px;
+    border:1px solid var(--w-10);border-radius:8px;overflow:hidden;background:#000;
+  }
+  .embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+  .totop{display:flex;justify-content:center;padding:0 0 88px}
+  .totop a{
+    display:inline-flex;align-items:center;
+    font-size:.63rem;text-transform:uppercase;letter-spacing:.24em;
+    color:var(--lilac-dim);text-decoration:none;
+    border:1px solid var(--w-10);border-radius:9999px;padding:13px 26px;
+    background:rgba(0,0,0,.45);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    transition:color .3s,border-color .3s,background .3s;
+  }
+  .totop a:hover{color:var(--lilac-hi);border-color:var(--lilac);background:rgba(0,0,0,.7)}
+  .totop a:focus-visible{outline:1px solid var(--lilac);outline-offset:3px}
+  .trackhead{
+    font-size:.7rem;text-transform:uppercase;letter-spacing:.3em;
+    color:var(--lilac);margin:0;
+  }
+  /* the windows label sits over a centred ring, so centre it too */
+  .stack--windows .trackhead{text-align:center}
+  .slab--wide .title{font-size:clamp(1.8rem,4vw,2.9rem);margin-bottom:30px}
+  .slab--wide .eyebrow{margin-bottom:26px}
+  .slab--wide .entries li{padding:26px 0}
+  .slab--wide .entries .t{font-size:1.35rem;font-weight:300}
+  .slab--wide .entries .s{font-size:1.05rem;margin-top:10px;max-width:80ch}
+  .slab--wide .entries .d{font-size:.68rem}
+  .slab--wide .chip{font-size:.64rem;padding:4px 14px}
+  .slab--center{text-align:center}
+  .eyebrow{font-size:.63rem;text-transform:uppercase;letter-spacing:.28em;color:var(--gray);margin:0 0 22px}
+
+  /* home */
+  #home .slab{text-align:center;max-width:min(640px,92vw)}
+
+  /* the four tabs ARE the navigation now */
+  .tabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:38px}
+  .tabs button{
+    all:unset;box-sizing:border-box;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;
+    height:2.9rem;padding:0 1.6rem;border-radius:9999px;
+    border:2px solid var(--w-25);background-clip:padding-box;
+    color:var(--white);font-size:.78rem;font-weight:500;
+    text-transform:uppercase;letter-spacing:.14em;
+    transition:border-color .3s,background .3s,color .3s;
+  }
+  .tabs button:hover{border-color:rgba(227,155,243,.55);color:var(--lilac-hi)}
+  .tabs button:focus-visible{outline:1px solid var(--lilac);outline-offset:4px}
+  /* selected = outline only; the fill was too heavy against the galaxy */
+  .tabs button[aria-current="true"]{
+    border-color:var(--lilac);color:var(--lilac-hi);background:transparent;
+  }
+
+  .hero-name{
+    font-size:clamp(1.5rem,3.6vw,2.6rem);font-weight:200;letter-spacing:.12em;
+    margin:9vh 0 22px;line-height:1.15;
+  }
+  /* education now holds the prominent slot; email is the quieter line under it */
+  .hero-line{
+    font-size:clamp(1rem,2.6vw,1.8rem);font-weight:300;
+    margin:0 auto 22px;max-width:none;color:var(--white);
+  }
+  .hero-mail{
+    display:inline-block;font-size:1rem;font-weight:400;margin:0;
+    color:var(--w-50);text-decoration:none;border-bottom:1px solid var(--w-25);
+    padding-bottom:4px;transition:color .4s,border-color .4s;
+  }
+  .hero-mail:hover{color:var(--white);border-color:var(--white)}
+  /* inline SVG marks - no icon font, no external request */
+  .hero-links{display:flex;gap:22px;justify-content:center;margin-top:20px}
+  .hero-links a{
+    display:grid;place-items:center;width:34px;height:34px;border-radius:50%;
+    color:var(--lilac-dim);transition:color .3s,background .3s;
+  }
+  .hero-links a:hover{color:var(--lilac-hi);background:var(--w-05)}
+  .hero-links a:focus-visible{outline:1px solid var(--lilac);outline-offset:2px}
+  .hero-links svg{width:19px;height:19px;fill:currentColor;display:block}
+
+  .pill{
+    display:inline-flex;align-items:center;justify-content:center;
+    height:3.5rem;padding:0 2rem;border-radius:9999px;
+    border:2px solid var(--w-25);background-clip:padding-box;
+    color:var(--white);text-decoration:none;
+    font-size:.88rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;
+    transition:border-color .3s,background .3s,color .3s;cursor:pointer;
+  }
+  .pill:hover{border-color:var(--lilac);background:var(--lilac);color:#000}
+  .pill:active{color:var(--active)}
+  .pill:focus-visible{outline:1px solid var(--w-25);outline-offset:4px}
+  .pill--sm{height:2.6rem;padding:0 1.5rem;font-size:.7rem}
+
+  h2.title{font-size:clamp(1.5rem,3.4vw,2.4rem);font-weight:200;letter-spacing:.01em;margin:0 0 20px;line-height:1.2}
+  .slab p{color:rgba(255,255,255,.74);font-size:1rem;margin:0 0 16px;max-width:62ch}
+  .slab p strong{color:var(--white);font-weight:400}
+
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{padding:18px 0;border-top:1px solid var(--w-10)}
+  .entries li:last-child{border-bottom:1px solid var(--w-10)}
+  .entries .hd{display:flex;justify-content:space-between;gap:18px;align-items:baseline;flex-wrap:wrap}
+  .entries .t{font-size:1.05rem;font-weight:400}
+  .entries .d{font-size:.63rem;text-transform:uppercase;letter-spacing:.15em;color:var(--gray);white-space:nowrap}
+  .entries .s{color:rgba(255,255,255,.7);font-size:.94rem;margin-top:6px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{font-size:.6rem;text-transform:uppercase;letter-spacing:.15em;color:var(--w-50);
+        border:1px solid var(--w-10);border-radius:9999px;padding:3px 12px;background:var(--w-05)}
+  a.chip--link{text-decoration:none;border-color:var(--w-25);transition:color .3s,border-color .3s}
+  a.chip--link:hover{color:var(--lilac-hi);border-color:var(--lilac)}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:32px}
+  .ck{font-size:.63rem;text-transform:uppercase;letter-spacing:.22em;color:var(--gray);margin-bottom:12px}
+  .cv{color:rgba(255,255,255,.74);font-size:.95rem;line-height:2}
+  .aboutrow{display:flex;gap:34px;align-items:flex-start}
+  #tracks .track[data-track="about"] section.view:nth-of-type(1) .slab{max-width:min(760px,56vw)}
+  /* square, not round; object-position sets where the square crop sits
+     on the portrait original - 38% lands it head-to-mid-chest */
+  .avatar{
+    width:clamp(150px,17vw,220px);height:clamp(150px,17vw,220px);
+    flex:0 0 clamp(150px,17vw,220px);
+    border:1px solid var(--w-25);background:var(--w-05);
+    object-fit:cover;object-position:50% 38%;display:block;
+  }
+  .todo{font-family:'Sora','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:.58rem;letter-spacing:.1em;
+        border:1px solid var(--w-25);border-radius:9999px;padding:1px 8px;color:var(--w-50)}
+
+  @media (max-width:900px){
+    header.bar{padding:14px 16px 18px}
+    .bar-row{grid-template-columns:minmax(0,1fr);gap:10px}
+    .logo,.bar-row .pill{display:none}
+    section.view{padding:90px 16px 90px;justify-content:center}
+    .track section.view:nth-of-type(odd),
+    .track section.view:nth-of-type(even){justify-content:center}
+    .tabs button{height:2.5rem;padding:0 1.15rem;font-size:.68rem;letter-spacing:.1em}
+    .slab,.slab--narrow,.slab--wide{padding:30px 22px;max-width:none;background:rgba(0,0,0,.58)}
+    /* the circle only works with room for it */
+    .pair{grid-template-columns:minmax(0,1fr);gap:14px}
+    .slab--head{max-width:none}
+    .embed{width:100%}
+    .ring{position:static;width:auto;max-width:none;aspect-ratio:auto;margin:14px 0 0;
+          display:grid;gap:12px}
+    .win{position:static;transform:none;width:auto;min-width:0}
+    .win:hover{transform:none}
+    .slab--wide .entries .t{font-size:1.1rem}
+    .slab--wide .entries .s{font-size:.95rem}
+    .aboutrow{flex-direction:column;gap:20px}
+  }
