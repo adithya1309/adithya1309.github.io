@@ -4,3 +4,6 @@ naxocss/
 
 # Lavish review artifact + its build notes. Working material, not the site.
 .lavish/
+
+# Source art for the favicon; the generated PNGs in assets/ are what ship.
+favicon.jpg
