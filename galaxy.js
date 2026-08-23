@@ -44,7 +44,7 @@ let camViews = [], poses = [];
 const cv = document.getElementById('field');
 const ctx = cv.getContext('2d', { alpha: true });
 const sprite = new Image();
-sprite.src = 'assets/star-particle.png';
+sprite.src = 'assets/lily-particle.png';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let W, H, cx, cy, zoom, dpr, ps = [], glow = null, running = true;
@@ -146,10 +146,13 @@ function frame(t){
 
     const sx = px + x1 * sc * persp;
     const sy = py + y2 * sc * persp;
-    const r  = p.s * persp * rs;
+    // Clamp near particles. The petal silhouette has hard edges, so an
+    // unclamped foreground bloom saturates into a big white blob; the soft
+    // dot this replaced hid that. Cap size and alpha and it stays dust.
+    const r  = Math.min(p.s * persp * rs, rs * 3.0);
     if (sx < -r || sx > W + r || sy < -r || sy > H + r) continue;
 
-    ctx.globalAlpha = p.a * persp;
+    ctx.globalAlpha = Math.min(0.8, p.a * persp);
     ctx.drawImage(glow, sx - r, sy - r, r * 2, r * 2);
   }
 
