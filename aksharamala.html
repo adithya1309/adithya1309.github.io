@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aksharamala — Adithya Renjit</title>
+<meta name="description" content="Aksharamala — a convolutional neural net and web app that teaches Malayalam script.">
+<link rel="icon" href="assets/favicon-16.png" sizes="16x16">
+<link rel="icon" href="assets/favicon.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ponytail: no canvas here, so no galaxy.js — the nebula/vignette layers are pure CSS -->
+<div id="nebula" aria-hidden="true"></div>
+<div id="vignette" aria-hidden="true"></div>
+
+<main>
+
+  <section class="view view--centred">
+    <div class="slab slab--wide">
+      <p class="eyebrow">Project</p>
+      <h2 class="title">Aksharamala</h2>
+      <p>A convolutional neural net and web app that teaches Malayalam script.</p>
+      <div class="embed">
+        <video src="demogif.mp4" title="Aksharamala demo"
+          autoplay loop muted playsinline preload="metadata"></video>
+      </div>
+      <div class="chips"><span class="chip">Python</span><span class="chip">PyTorch</span><span
+        class="chip">pandas</span><span class="chip">Completed</span><a class="chip chip--link"
+        href="https://youtu.be/Khj7lOnFQ6Q" target="_blank" rel="noopener">Demo</a></div>
+    </div>
+  </section>
+
+  <section class="view view--centred">
+    <div class="slab slab--wide">
+      <p class="eyebrow">Overview</p>
+      <h2 class="title">Learning a script by writing it.</h2>
+      <p>Malayalam has 56 letters and a lot of visually similar shapes, which makes flashcards a poor
+         way in &mdash; recognising a character is not the same skill as producing one. Aksharamala
+         flips that: you draw the letter, and a convolutional classifier tells you what you actually
+         wrote rather than what you meant to write.</p>
+    </div>
+  </section>
+
+  <section class="view view--centred">
+    <div class="slab slab--wide">
+      <p class="eyebrow">How it works</p>
+      <h2 class="title">Model and app.</h2>
+      <ul class="entries">
+        <li>
+          <div class="hd"><span class="t">Data</span></div>
+          <div class="s">Handwritten Malayalam character images, normalised to a fixed canvas size and
+              augmented with small rotations, shifts, and stroke-thickness variation so the model
+              tolerates real handwriting.</div>
+        </li>
+        <li>
+          <div class="hd"><span class="t">Model</span></div>
+          <div class="s">A convolutional network in PyTorch &mdash; stacked conv/pool blocks into a
+              dense classifier over the character set, trained with cross-entropy.</div>
+        </li>
+        <li>
+          <div class="hd"><span class="t">App</span></div>
+          <div class="s">A browser canvas captures the stroke, sends it to the model, and returns the
+              predicted character with its confidence, so a wrong guess doubles as feedback on the
+              stroke itself.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="totop">
+    <a href="index.html">&larr;&nbsp;&nbsp;Back to projects</a>
+  </div>
+
+</main>
+
+</body>
+</html>
