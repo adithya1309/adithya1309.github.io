@@ -3,18 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aksharamala — Adithya Renjit</title>
-<meta name="description" content="Aksharamala — a convolutional neural net and web app that teaches Malayalam script.">
+<title>Aksharamala | Adithya Renjit</title>
+<meta name="description" content="Aksharamala, a CNN that recognises 85 handwritten Malayalam characters, trained in PyTorch and run entirely in the browser with ONNX Runtime Web.">
 <link rel="icon" href="assets/favicon-16.png" sizes="16x16">
 <link rel="icon" href="assets/favicon.png" sizes="32x32">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* ponytail: page-local article styles. This page is a long-form write-up,
+     not the full-viewport scroll sections the rest of the site uses */
+  .doc{padding:clamp(60px,8vw,110px) clamp(20px,6vw,96px) 0}
+  .doc-inner{width:100%;max-width:900px;margin:0 auto}
+  .doc h2{font-size:clamp(1.3rem,2.6vw,1.9rem);font-weight:300;letter-spacing:.01em;
+          line-height:1.25;margin:62px 0 18px;padding-top:26px;border-top:1px solid var(--w-10)}
+  .doc h3{font-size:1.05rem;font-weight:400;color:var(--lilac-hi);margin:36px 0 14px}
+  .doc p{color:rgba(255,255,255,.74);font-size:1rem;margin:0 0 16px;max-width:74ch}
+  .doc p strong{color:var(--white);font-weight:400}
+  .doc a{color:var(--lilac);text-decoration:none;border-bottom:1px solid rgba(227,155,243,.35)}
+  .doc a:hover{color:var(--lilac-hi);border-color:var(--lilac)}
+  .doc ul{color:rgba(255,255,255,.74);font-size:1rem;padding-left:20px;margin:0 0 16px;max-width:74ch}
+  .doc li{margin-bottom:10px}
+  .lead{font-size:1.1rem;color:rgba(255,255,255,.85);max-width:70ch}
+  pre{margin:20px 0;padding:22px 24px;overflow-x:auto;
+      background:rgba(0,0,0,.55);border:1px solid var(--w-10);border-radius:8px;
+      -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+  pre code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.75;
+           color:rgba(255,255,255,.82);white-space:pre}
+  code .c{color:var(--lilac-dim)}
+  p code,li code,td code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82em;
+        color:var(--lilac-hi);background:var(--w-05);border:1px solid var(--w-10);
+        border-radius:4px;padding:1px 5px}
+  .flow{margin:22px 0;padding:18px 22px;overflow-x:auto;text-align:center;
+        border:1px solid var(--w-10);border-radius:8px;background:var(--w-05);
+        font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.76rem;
+        letter-spacing:.04em;color:rgba(255,255,255,.7);white-space:nowrap}
+  .flow b{color:var(--lilac);font-weight:400}
+  .tablewrap{overflow-x:auto;margin:22px 0}
+  table{border-collapse:collapse;width:100%;min-width:380px;font-size:.92rem}
+  th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--w-10);
+        color:rgba(255,255,255,.74)}
+  th{font-size:.63rem;text-transform:uppercase;letter-spacing:.2em;color:var(--gray);font-weight:400}
+  td:last-child,th:last-child{text-align:right;font-family:ui-monospace,Menlo,Consolas,monospace}
+  tr.key td{color:var(--white)}
+  tr.key td:last-child{color:var(--lilac-hi)}
+  figure{margin:30px 0 26px}
+  figure img{width:100%;display:block;border:1px solid var(--w-10);border-radius:8px;
+             background:#fff;padding:10px}
+  figcaption{font-size:.7rem;letter-spacing:.06em;color:var(--gray);margin-top:10px;text-align:center}
+  .refs{font-size:.85rem;color:rgba(255,255,255,.6);max-width:74ch}
+  @media (max-width:900px){
+    .doc{padding:60px 18px 0}
+    .doc h2{margin-top:46px}
+  }
+</style>
 </head>
 <body>
 
-<!-- ponytail: no canvas here, so no galaxy.js — the nebula/vignette layers are pure CSS -->
+<!-- ponytail: no canvas here, so no galaxy.js; the nebula/vignette layers are pure CSS -->
 <div id="nebula" aria-hidden="true"></div>
 <div id="vignette" aria-hidden="true"></div>
 
@@ -24,55 +71,207 @@
     <div class="slab slab--wide">
       <p class="eyebrow">Project</p>
       <h2 class="title">Aksharamala</h2>
-      <p>A convolutional neural net and web app that teaches Malayalam script.</p>
+      <p>A convolutional network that recognises 85 handwritten Malayalam characters, trained in
+         PyTorch and run entirely in the browser through ONNX Runtime Web. Draw a character on the
+         canvas and the model reads it back to you, with a confidence score attached.</p>
       <div class="embed">
         <video src="demogif.mp4" title="Aksharamala demo"
           autoplay loop muted playsinline preload="metadata"></video>
       </div>
       <div class="chips"><span class="chip">Python</span><span class="chip">PyTorch</span><span
-        class="chip">pandas</span><span class="chip">Completed</span><a class="chip chip--link"
-        href="https://youtu.be/Khj7lOnFQ6Q" target="_blank" rel="noopener">Demo</a></div>
+        class="chip">ONNX Runtime Web</span><span class="chip">Completed</span><a class="chip chip--link"
+        href="https://github.com/adithya1309/aksharamala" target="_blank" rel="noopener">GitHub</a><a
+        class="chip chip--link" href="https://youtu.be/Khj7lOnFQ6Q" target="_blank" rel="noopener">Demo</a></div>
     </div>
   </section>
 
-  <section class="view view--centred">
-    <div class="slab slab--wide">
-      <p class="eyebrow">Overview</p>
-      <h2 class="title">Learning a script by writing it.</h2>
-      <p>Malayalam has 56 letters and a lot of visually similar shapes, which makes flashcards a poor
-         way in &mdash; recognising a character is not the same skill as producing one. Aksharamala
-         flips that: you draw the letter, and a convolutional classifier tells you what you actually
-         wrote rather than what you meant to write.</p>
-    </div>
-  </section>
+  <article class="doc">
+   <div class="doc-inner">
 
-  <section class="view view--centred">
-    <div class="slab slab--wide">
-      <p class="eyebrow">How it works</p>
-      <h2 class="title">Model and app.</h2>
-      <ul class="entries">
-        <li>
-          <div class="hd"><span class="t">Data</span></div>
-          <div class="s">Handwritten Malayalam character images, normalised to a fixed canvas size and
-              augmented with small rotations, shifts, and stroke-thickness variation so the model
-              tolerates real handwriting.</div>
-        </li>
-        <li>
-          <div class="hd"><span class="t">Model</span></div>
-          <div class="s">A convolutional network in PyTorch &mdash; stacked conv/pool blocks into a
-              dense classifier over the character set, trained with cross-entropy.</div>
-        </li>
-        <li>
-          <div class="hd"><span class="t">App</span></div>
-          <div class="s">A browser canvas captures the stroke, sends it to the model, and returns the
-              predicted character with its confidence, so a wrong guess doubles as feedback on the
-              stroke itself.</div>
-        </li>
-      </ul>
-    </div>
-  </section>
+    <p class="lead">Malayalam has a lot of visually similar shapes, which makes flashcards a poor way
+      in. Recognising a character is a different skill from producing one, so Aksharamala asks you to
+      produce it: you draw the letter, and the classifier reads back whatever your stroke actually
+      says. It reaches <strong>94.5% test accuracy on handwriting from 18 writers the model never
+      trained on</strong>, and ships as a static site with no backend at all.</p>
 
-  <div class="totop">
+    <div class="flow"><b>CSV</b> &rarr; data.py &rarr; model.py &rarr; train.py &rarr; <b>model.pt</b>
+      &rarr; export.py &rarr; <b>model.onnx</b> &rarr; app/</div>
+
+    <p>The whole pipeline is seven files. Training runs locally, and export freezes the network into
+      an ONNX graph that is verified against PyTorch before anything ships. The app then loads that
+      2.8&nbsp;MB graph plus a labels file straight into the browser, where every prediction runs on
+      the visitor's own machine. A drawing never leaves it.</p>
+
+    <h2>Technical implementation</h2>
+
+    <h3>The network</h3>
+    <p>A plain VGG-style stack. Convolutional blocks double in width while max-pooling takes the
+      image from 32&times;32 down to 4&times;4, and dropout then feeds a small dense classifier.
+      There is no batch norm and no residual connection. At this input size and dataset scale neither
+      one buys anything worth the extra surface area.</p>
+
+<pre><code>model = nn.Sequential(
+    <span class="c"># block 1: two 3x3 convs at 32 filters, then halve to 16x16</span>
+    nn.Conv2d(1, 32, 3, padding=1), nn.ReLU(),
+    nn.Conv2d(32, 32, 3, padding=1), nn.ReLU(),
+    nn.MaxPool2d(2),
+
+    <span class="c"># block 2: widen to 64 as the map shrinks, then halve to 8x8</span>
+    nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(),
+    nn.Conv2d(64, 64, 3, padding=1), nn.ReLU(),
+    nn.MaxPool2d(2),
+
+    <span class="c"># block 3: one 128-filter conv is enough this deep, down to 4x4</span>
+    nn.Conv2d(64, 128, 3, padding=1), nn.ReLU(),
+    nn.MaxPool2d(2),
+
+    nn.Flatten(),
+    nn.Dropout(0.5),           <span class="c"># the single biggest accuracy lever, see below</span>
+    nn.Linear(128 * 4 * 4, 256), nn.ReLU(),
+    nn.Linear(256, 85),        <span class="c"># 85 character classes, logits out</span>
+)
+
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)</code></pre>
+
+    <h3>Data and augmentation</h3>
+    <p>The dataset arrives as three CSVs of flattened 32&times;32 binarised images. Loading takes a
+      few lines, two of which quietly encode a property of the file format that the CSVs never
+      advertise. That one is covered under challenges below.</p>
+
+<pre><code>raw = pd.read_csv(DATA_DIR / f"Handwritten_V2_{name}.csv", header=None).to_numpy("float32")
+<span class="c"># pixels are stored column-wise, so reshape then transpose, or every image loads sideways</span>
+x = torch.from_numpy(raw[:, 1:]).view(-1, 1, 32, 32).transpose(2, 3)
+y = torch.from_numpy(raw[:, 0]).long() - 1   <span class="c"># labels are 1-indexed in the file</span></code></pre>
+
+    <p>Augmentation runs per batch and is built around what actually varies in handwriting. Small
+      affine jitter plus an elastic warp bend the strokes the way an unsteady hand does, and random
+      dilation or erosion stands in for pen pressure. A final threshold puts the image back into the
+      binary domain the model trains on.</p>
+
+<pre><code>augment = v2.Compose([
+    v2.RandomAffine(degrees=8, translate=(0.08, 0.08), scale=(0.9, 1.1), shear=5),
+    v2.ElasticTransform(alpha=20.0, sigma=4.0),                                 <span class="c"># stroke wobble</span>
+    v2.RandomApply([v2.Lambda(lambda t: F.max_pool2d(t, 3, 1, 1))], p=0.25),    <span class="c"># thicker pen</span>
+    v2.RandomApply([v2.Lambda(lambda t: -F.max_pool2d(-t, 3, 1, 1))], p=0.25),  <span class="c"># thinner pen</span>
+    v2.Lambda(lambda t: (t &gt; 0.5).float()),                                     <span class="c"># re-binarise</span>
+])</code></pre>
+
+    <h3>Training</h3>
+    <p>75 epochs cap, batch size 64, Adam at 1e-3, and early stopping after 15 epochs without
+      validation improvement. The checkpoint written to disk is always the best validation epoch, so
+      a late dip in training can never follow the model into export. Training loss is measured on
+      augmented batches while validation loss is measured on clean images, so read the trend of the
+      two curves and ignore the absolute gap between them.</p>
+
+    <figure>
+      <img src="assets/aksharamala-curves.png" alt="Training and validation loss, and validation accuracy per epoch">
+      <figcaption>Loss on augmented train vs clean validation, and validation accuracy per epoch.</figcaption>
+    </figure>
+
+    <h2>Results</h2>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Split</th><th>Accuracy</th></tr></thead>
+        <tbody>
+          <tr><td>Train</td><td>99.1%</td></tr>
+          <tr><td>Validation</td><td>98.1%</td></tr>
+          <tr class="key"><td>Test (held-out writers)</td><td>94.5%</td></tr>
+          <tr><td>Test, top-5</td><td>99.6%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Getting there: baseline <strong>88.3%</strong> &rarr; augmentation <strong>92.7%</strong>
+       &rarr; dropout <strong>94.3&ndash;95.2%</strong>. Run-to-run variation at a fixed
+       configuration is about &plusmn;1 point, so treat any difference smaller than that as
+       noise.</p>
+
+    <p>The remaining errors concentrate in visually similar character pairs, which is a property of
+       the script itself. Top-5 accuracy of 99.6% says the network nearly always has the right answer
+       in mind. It just cannot always pick between near-identical shapes.</p>
+
+    <figure>
+      <img src="assets/aksharamala-classes.png" alt="The 85 Malayalam character classes in the dataset">
+      <figcaption>The 85 classes. Several pairs differ by a single stroke.</figcaption>
+    </figure>
+
+    <h2>Challenges and solutions</h2>
+
+    <h3>Overfitting</h3>
+    <p><strong>Problem.</strong> The baseline network memorised its training writers: near-perfect
+       train accuracy against 88.3% on held-out ones.</p>
+    <p><strong>Solution.</strong> Augmentation first, which bought 4.4 points by making the model
+       tolerate shape and thickness variation it had never seen. Dropout at 0.5 before the dense head
+       bought another 1.6&ndash;2.5 on top of that. Early stopping on validation accuracy then keeps
+       the saved checkpoint from drifting past its best point.</p>
+
+    <h3>Train/serve parity</h3>
+    <p><strong>Problem.</strong> This is the classic way a model scores well in the notebook and
+       feels broken in the browser: the two sides preprocess differently.</p>
+    <p><strong>Solution.</strong> Training images are cropped to the ink bounding box and stretched
+       to 32&times;32 <em>without</em> preserving aspect ratio, then binarised at a threshold of 128.
+       <code>app/app.js</code> does exactly the same to the canvas before inference, down to that
+       threshold. One canvas-specific adjustment remains: scanned ballpoint strokes are heavier than
+       a downsampled mouse line, so if ink coverage falls below <code>MIN_INK</code> (0.12, against a
+       dataset mean of 21.5%) the image is dilated once. <code>MIN_INK</code> and <code>PEN</code>
+       are the knobs to tune if predictions feel wrong on real drawings.</p>
+
+    <h3>Two undocumented properties of the dataset</h3>
+    <p>Both cost a debugging session, and neither is stated in the CSVs:</p>
+    <ul>
+      <li>Pixels are vectorised <strong>column-wise</strong>. A row-major <code>reshape</code> loads
+          every image transposed, and the model will train perfectly happily on sideways characters,
+          so nothing fails loudly.</li>
+      <li>The class label order is <strong>not</strong> the order of Table 1 in the source paper. The
+          mapping in <code>glyphs.py</code> was recovered by matching that paper's Table 3 per-class
+          counts against the CSVs; 16 indices are anchored exactly, and the conjunct block's interior
+          follows Table 1 order without individual verification.</li>
+    </ul>
+
+    <h3>Getting it into the browser</h3>
+    <p>The export step checks its own work. <code>export.py</code> writes the ONNX graph, then runs
+       a real test batch through both PyTorch and ONNX Runtime and asserts that the outputs match to
+       1e-5 and agree on every argmax. Numerical drift fails the export loudly at that point, well
+       before it can reach a visitor.</p>
+
+<pre><code>onnx_out = onnxruntime.InferenceSession("model.onnx").run(None, {"input": x.numpy()})[0]
+assert np.allclose(torch_out, onnx_out, atol=1e-5), "ONNX output drifted from PyTorch"
+assert (torch_out.argmax(1) == onnx_out.argmax(1)).all(), "ONNX predicts a different class"</code></pre>
+
+    <h2>Known limitations</h2>
+    <ul>
+      <li>The writer pool skews heavily female (60 of 77) and is adults-only with at least graduate
+          education, so generalisation to children's or less practised handwriting is untested.</li>
+      <li>Training data is scanned pen-on-paper; the app feeds it uniform digital strokes. The
+          preprocessing above narrows that gap but does not close it.</li>
+      <li><strong>26% of the model's mistakes are made above 0.9 confidence.</strong> High confidence
+          is not a guarantee, and the UI should not present it as one.</li>
+    </ul>
+
+    <h2>Dataset</h2>
+    <p>Amrita_MalCharDb: 85 character classes, 29,302 images from 77 native Malayalam writers,
+       scanned ballpoint on paper, segmented with active contour models and binarised to 32&times;32.
+       The dataset is not redistributed in the repository; it is available from the authors on
+       request.</p>
+    <p class="refs">K. Manjusha, M. Anand Kumar, K.P. Soman, &ldquo;On developing handwritten
+       character image database for Malayalam language script&rdquo;, <em>Engineering Science and
+       Technology, an International Journal</em> 22 (2019) 637&ndash;645.
+       <a href="https://doi.org/10.1016/j.jestch.2018.10.011" target="_blank" rel="noopener">doi:10.1016/j.jestch.2018.10.011</a></p>
+
+    <h2>Libraries used</h2>
+    <div class="chips">
+      <span class="chip">Python</span><span class="chip">PyTorch</span><span class="chip">torchvision</span
+      ><span class="chip">ONNX</span><span class="chip">ONNX Runtime Web</span><span class="chip">pandas</span
+      ><span class="chip">NumPy</span><span class="chip">scikit-learn</span><span class="chip">Matplotlib</span
+      ><span class="chip">seaborn</span>
+    </div>
+
+   </div>
+  </article>
+
+  <div class="totop" style="padding-top:80px">
     <a href="index.html">&larr;&nbsp;&nbsp;Back to projects</a>
   </div>
 
