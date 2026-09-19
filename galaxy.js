@@ -10,6 +10,7 @@ const CFG = {
   randomPower: 3,      // clusters particles toward the arm centre-line
   thickness: 0.16,     // disc height as a fraction of radius
   focal: 5.2,
+  stars: 600,          // one background star per this many screen pixels
   color: '#e39bf3'     // fixed lilac; additive blending does the rest
 };
 
@@ -47,7 +48,7 @@ const sprite = new Image();
 sprite.src = 'assets/star-particle.png';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-let W, H, cx, cy, zoom, dpr, ps = [], glow = null, running = true;
+let W, H, cx, cy, zoom, dpr, ps = [], glow = null, stars = null, running = true;
 
 /* Tint the sprite once. drawImage cannot colourise, and doing it per
    particle per frame would be fatal at these counts. */
@@ -73,7 +74,7 @@ function build(){
   zoom = Math.min(W, H) / 11;
 
   // Small particles cost little fill each, so the count can go high.
-  const count = Math.round(Math.min(6000, Math.max(1400, (W * H) / 420)));
+  const count = Math.round(Math.min(14000, Math.max(3600, (W * H) / 180)));
   ps = new Array(count);
   for (let i = 0; i < count; i++){
     const r = Math.pow(Math.random(), 1.4) * 5;              // denser inward
@@ -88,6 +89,34 @@ function build(){
       s: 0.45 + Math.random() * 1.15,
       a: 0.16 + Math.random() * 0.42
     };
+  }
+
+  starfield();
+}
+
+/* The cosmos behind the galaxy. These never move, so paint them once and
+   blit the layer - ponytail: one drawImage per frame, not ten thousand. */
+function starfield(){
+  stars = document.createElement('canvas');
+  stars.width = cv.width; stars.height = cv.height;
+  const g = stars.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const n = Math.round(W * H / CFG.stars);
+  for (let i = 0; i < n; i++){
+    const t = Math.random();
+    g.globalAlpha = 0.16 + Math.pow(Math.random(), 2) * 0.74;
+    g.fillStyle = t > 0.93 ? '#ded4ff' : t > 0.86 ? '#cfe0ff' : '#ffffff';
+    g.beginPath();
+    g.arc(Math.random() * W, Math.random() * H,
+          t > 0.985 ? 1.4 : t > 0.88 ? 0.85 : 0.5, 0, Math.PI * 2);
+    g.fill();
+  }
+  // a scattering of brighter ones get the sprite's bloom
+  g.globalCompositeOperation = 'lighter';
+  for (let i = 0, m = Math.round(n / 70); i < m; i++){
+    const r = 2.5 + Math.random() * 3.5;
+    g.globalAlpha = 0.3 + Math.random() * 0.35;
+    g.drawImage(glow, Math.random() * W - r, Math.random() * H - r, r * 2, r * 2);
   }
 }
 
@@ -124,6 +153,8 @@ function frame(t){
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, W, H);
   ctx.globalCompositeOperation = 'lighter';   // the additive blend
+  ctx.globalAlpha = 1;
+  ctx.drawImage(stars, 0, 0, W, H);           // cosmos first, galaxy on top
 
   const c = camera();
   const yaw = c.yaw + (reduce ? 0 : t * 0.00003);   // always drifting
