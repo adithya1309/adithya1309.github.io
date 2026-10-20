@@ -307,4 +307,4 @@
            margin-top:calc(-1 * (.63rem * 1.2 + 22px));
            transition:height .5s cubic-bezier(.22,1,.36,1)}
   .slab:has(.expand[open]) .edulogo{height:150px}
-  .totop--inline{padding:0;margin-top:26px;justify-content:flex-start}
+  .totop--inline{padding:0;margin-top:26px;justify-content:flex-start;gap:12px;flex-wrap:wrap}
